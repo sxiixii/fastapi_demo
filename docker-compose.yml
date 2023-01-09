@@ -1,0 +1,58 @@
+version: '3.7'
+
+services:
+
+  elasticsearch:
+    image: elastic/elasticsearch:8.5.3
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    expose:
+      - "9200"
+    networks:
+      - elasticsearch
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    restart: always
+    networks:
+      - redis
+
+  fast_api:
+    build: .
+    container_name: fast_api
+    ports:
+      - '8000:8000'
+    env_file:
+      - ./src/.env
+    depends_on:
+      - elasticsearch
+      - redis
+    networks:
+      - fast_api
+
+volumes:
+  elasticsearch-data:
+    driver: local
+
+networks:
+  elasticsearch:
+    name: s4_network
+  redis:
+    name: s4_network
+  fast_api:
+    name: s4_network

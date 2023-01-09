@@ -1,0 +1,39 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: 'https://github.com/pre-commit/pre-commit-hooks'
+    rev: v4.4.0
+    hooks:
+      # проверяет наличие переноса строки в конце всех текстовых файлов
+      - id: end-of-file-fixer
+      # предупреждает о добавлении больших файлов в Git
+      - id: check-added-large-files
+      # предупреждает о сохранении файлов с UTF-8 BOM
+      - id: check-byte-order-marker
+      # предотвращает сохранение приватных ключей
+      - id: detect-private-key
+      # проверяет, что файлы, которые мы собираемся сохранять, как минимум валидный Python
+      - id: check-ast
+  - repo: 'https://github.com/pycqa/flake8'
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        args: [
+          '--config=setup.cfg' ,
+          '--ignore=B008,CF002',
+        ]
+        additional_dependencies:
+          - flake8-bugbear
+          - flake8-simplify
+          - flake8-annotations
+          - flake8-fastapi
+
+  - repo: 'https://github.com/psf/black'
+    rev: 22.12.0
+    hooks:
+      - id: black
+
+  - repo: 'https://github.com/pycqa/isort'
+    rev: 5.10.1
+    hooks:
+      - id: isort
