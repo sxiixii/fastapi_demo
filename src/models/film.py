@@ -1,32 +1,14 @@
 from models.base import BaseOrjsonModel
-from models.person import PersonShortResponseForFilm
-from models.genre import GenreShortResponseForFilm
 
-class FilmShortResponse(BaseOrjsonModel):
-    '''
-    базовая модель ответа для Film
-    '''
+
+class FilmModel(BaseOrjsonModel):
     title: str
-
-class FilmResponce(FilmShortResponse):
-    '''
-    основная модель ответа для Film
-    наследуется от базовой модели
-    '''
     imdb_rating: float | None = 0.0
-    genre: list[GenreShortResponseForFilm] = []
+    genre: list[str] = []
     description: str | None = ""
-    director: str | None = ""
+    director: list[str] = []
     actors_names: list[str] = []
     writers_names: list[str] = []
-
-class FilmDetailedResponse(FilmResponce):
-    '''
-    расширенная модель ответа для Film
-    наследуется от основной модели
-    '''
-    actors: list[PersonShortResponseForFilm] = []
-    writers: list[PersonShortResponseForFilm] = []
-
-
+    actors: list[dict] = []
+    writers: list[dict] = []
 

@@ -1,12 +1,15 @@
 import elasticsearch.exceptions
+import orjson
 from aioredis import Redis
-from elasticsearch import AsyncElasticsearch
+
 from orjson import loads as orjson_loads
 from core.config import CACHE_EXPIRE_IN_SECONDS
+from elasticsearch import AsyncElasticsearch, NotFoundError
 from models.base import orjson_dumps
-from models.film import FilmDetailedResponse as FDR
-from models.genre import GenreDetailedResponse as GDR
-from models.person import PersonDetailedResponse as PDR
+
+from models.film import FilmModel as FM
+from models.genre import GenreModel as GM
+from models.person import PersonModel as PM
 
 from .utils import get_body
 
@@ -15,13 +18,13 @@ class BaseService:
     '''
     Базовый класс для всех сервисных классов, содержащий общую бизнес-логику
     '''
-    def __init__(self, index: str, model: FDR | GDR | PDR | None, elastic: AsyncElasticsearch, redis: Redis) -> None:
+    def __init__(self, index: str, model: FM | GM | PM | None, elastic: AsyncElasticsearch, redis: Redis) -> None:
         self.index = index
         self.model = model
         self.redis = redis
         self.elastic = elastic
 
-    async def get_by_id(self, id: str) -> FDR | GDR | PDR | None:
+    async def get_by_id(self, id: str) -> FM | GM | PM | None:
         '''
         вернуть объект по идентификатору
         '''
@@ -40,7 +43,7 @@ class BaseService:
                 await self._put_obj_to_cache(redis_key, obj)
         return obj
 
-    async def get_by_params(self, **params) -> list[FDR | GDR | PDR | None]:
+    async def get_by_params(self, **params) -> list[FM | GM | PM | None]:
         '''
         вернуть объекты по параметрам
         '''
@@ -60,10 +63,35 @@ class BaseService:
                 await self._put_list_to_cache(redis_key, obj_list)
         return obj_list
 
-    def redis_key(self, params):
-        return hash(self.index + orjson_dumps(params))
+    async def get_by_list_of_id(self, ids_list: list[str]) -> list[FM | GM | PM] | None:
+        key = self.redis_key(''.join(ids_list))
+        films = await self._obj_from_cache(key)
+        if not films:
+            films = await self._get_by_ids_from_elastic(ids_list)
+            if not films:
+                return None
+        return films
 
-    async def _obj_from_cache(self, redis_key: int) -> FDR | GDR | PDR | None:
+    async def _get_by_ids_from_elastic(self, ids_list: list[str]) -> list[FM | GM | PM] | None:
+        body = {'query': {'terms': {'id': ids_list, 'boost': 1.0}}}
+        try:
+            doc = await self.elastic.search(index='movies', body=body)
+        except NotFoundError:
+            return None
+        list_of_films = doc['hits']['hits']
+        return [
+            FM(
+                id=film['_source']['id'],
+                title=film['_source']['title'],
+                imdb_rating=film['_source']['imdb_rating'],
+                description=film['_source']['description']
+            ) for film in list_of_films
+        ]
+
+    def redis_key(self, params):
+        return hash(self.index + orjson.dumps(params).decode())
+
+    async def _obj_from_cache(self, redis_key: int) -> FM | GM | PM | None:
         '''
         вернуть объект из кэша
         '''
@@ -73,7 +101,7 @@ class BaseService:
         else:
             return self.model.parse_raw(data)
 
-    async def _list_from_cache(self, redis_key: int) -> list[FDR | GDR | PDR] | None:
+    async def _list_from_cache(self, redis_key: int) -> list[FM | GM | PM] | None:
         '''
         вернуть несколько объектов из кэша
         '''
@@ -83,13 +111,13 @@ class BaseService:
         else:
             return [self.model.parse_raw(_data) for _data in orjson_loads(data)]
 
-    async def _put_obj_to_cache(self, redis_key: int, obj: FDR | GDR | PDR | None):
+    async def _put_obj_to_cache(self, redis_key: int, obj: FM | GM | PM | None):
         '''
         положить объект в кэш
         '''
         await self.redis.set(redis_key, obj.json(), expire=CACHE_EXPIRE_IN_SECONDS)
 
-    async def _put_list_to_cache(self, redis_key: int, obj_list: list[FDR | GDR | PDR | None]):
+    async def _put_list_to_cache(self, redis_key: int, obj_list: list[FM | GM | PM | None]):
         '''
         положить объекты в кэш
         '''

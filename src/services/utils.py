@@ -1,27 +1,27 @@
 from typing import Any, Optional, Union
 
 from fastapi import Request
+
+from pydantic import BaseModel
 from pydantic.types import PositiveInt
 
-from models.base import BaseOrjsonModel
 
-
-class Page(BaseOrjsonModel):
+class Page(BaseModel):
     size: PositiveInt = 50
     number: PositiveInt = 1
 
 
-class Filter(BaseOrjsonModel):
+class Filter(BaseModel):
     field: str
     value: str
 
 
-class Should(BaseOrjsonModel):
+class Should(BaseModel):
     field: str
     value: str
 
 
-class Body(BaseOrjsonModel):
+class Body(BaseModel):
     query: Optional[str]
     sort: Optional[str]
     filter: Optional[Filter]
@@ -33,20 +33,20 @@ def _validate_query_params(
     query: str = None,
     sort: str = None,
     page: dict = None,
-    filter: dict = None,
+    _filter: dict = None,
     should: list = None,
 ) -> Body:
     page = page and Page(**page)
-    if filter is not None:
-        field, value = tuple(filter.items())[0]
-        filter = Filter(field=field, value=value)
+    if _filter is not None:
+        field, value = tuple(_filter.items())[0]
+        _filter = Filter(field=field, value=value)
     if should is not None:
         should_list = []
         for should_item in should:
             field, value = tuple(should_item.items())[0]
             should_list.append(Should(field=field, value=value))
         should = should_list
-    body = Body(query=query, sort=sort, filter=filter, page=page, should=should)
+    body = Body(query=query, sort=sort, filter=_filter, page=page, should=should)
     return body
 
 
@@ -70,7 +70,7 @@ def get_body(**raw_params) -> dict[str, Any]:
         query_body["query"] = {"match_all": {}}
 
     # sorting
-    if params.sort is not None:
+    if params.sort:
         field = params.sort.removeprefix("-")
         direction = "desc" if params.sort.startswith("-") else "asc"
         query_body["sort"] = {field: {"order": direction}}
@@ -82,12 +82,12 @@ def _get_search_query(query: str) -> dict:
     return {"query_string": {"query": query}}
 
 
-def _get_filter_query(filter: Filter) -> dict:
-    nested_field = f"{filter.field}.id"
+def _get_filter_query(_filter: Filter) -> dict:
+    nested_field = f"{_filter.field}.id"
     return {
         "nested": {
-            "path": filter.field,
-            "query": {"bool": {"must": [{"match": {nested_field: filter.value}}]}},
+            "path": _filter.field,
+            "query": {"bool": {"must": [{"match": {nested_field: _filter.value}}]}},
         }
     }
 
