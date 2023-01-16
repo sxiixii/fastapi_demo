@@ -13,7 +13,7 @@ class Page(BaseModel):
 
 class Filter(BaseModel):
     field: str
-    value: str
+    value: str | None
 
 
 class Should(BaseModel):
@@ -24,7 +24,7 @@ class Should(BaseModel):
 class Body(BaseModel):
     query: Optional[str]
     sort: Optional[str]
-    filter: Optional[Filter]
+    query_filter: Optional[Filter]
     should: Optional[list[Should]]
     page: Optional[Page]
 
@@ -33,20 +33,21 @@ def _validate_query_params(
     query: str = None,
     sort: str = None,
     page: dict = None,
-    _filter: dict = None,
+    query_filter: dict = None,
     should: list = None,
 ) -> Body:
     page = page and Page(**page)
-    if _filter is not None:
-        field, value = tuple(_filter.items())[0]
-        _filter = Filter(field=field, value=value)
+    if query_filter['value'] is not None:
+        field = query_filter['field']
+        value = query_filter['value']
+        query_filter = Filter(field=field, value=value)
     if should is not None:
         should_list = []
         for should_item in should:
             field, value = tuple(should_item.items())[0]
             should_list.append(Should(field=field, value=value))
         should = should_list
-    body = Body(query=query, sort=sort, filter=_filter, page=page, should=should)
+    body = Body(query=query, sort=sort, query_filter=query_filter, page=page, should=should)
     return body
 
 
@@ -62,8 +63,8 @@ def get_body(**raw_params) -> dict[str, Any]:
     # searching
     if params.query is not None:
         query_body.setdefault("query", {}).update(_get_search_query(params.query))
-    if params.filter is not None:
-        query_body.setdefault("query", {}).update(_get_filter_query(params.filter))
+    if params.query_filter.value is not None:
+        query_body.setdefault("query", {}).update(_get_filter_query(params.query_filter))
     if params.should is not None:
         query_body.setdefault("query", {}).update(_get_should_query(params.should))
     if "query" not in query_body:
@@ -83,13 +84,7 @@ def _get_search_query(query: str) -> dict:
 
 
 def _get_filter_query(_filter: Filter) -> dict:
-    nested_field = f"{_filter.field}.id"
-    return {
-        "nested": {
-            "path": _filter.field,
-            "query": {"bool": {"must": [{"match": {nested_field: _filter.value}}]}},
-        }
-    }
+    return {"match": {_filter.field: {"query": _filter.value}}}
 
 
 def _get_should_query(should_list: list[Should]) -> dict:

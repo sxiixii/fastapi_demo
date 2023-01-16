@@ -6,7 +6,8 @@ def orjson_dumps(v, *, default):
     return orjson.dumps(v, default=default).decode()
 
 
-class FilmWorkBaseModel(BaseModel):
+class BaseOrjsonModel(BaseModel):
+    id: str
 
     class Config:
         json_loads = orjson.loads

@@ -3,8 +3,10 @@ from http import HTTPStatus
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from services.film import FilmService, get_film_service
-
 from typing import List
+
+from .dependencies import film_search_parameters, film_list_parameters
+
 
 router = APIRouter()
 
@@ -13,7 +15,7 @@ class APIFilmList(BaseModel):
     id: str
     title: str
     imdb_rating: float
-    # genre: List[Genre]
+    genre: List[str]
 
 
 class APIFilm(BaseModel):
@@ -32,20 +34,17 @@ class APIFilm(BaseModel):
 
 @router.get("/search", response_model=List[APIFilmList])
 async def film_search(
-    query: str = Query(None, description="Часть названия фильма (Пример: dark sta )"),
-    page_size: int = Query(10, description="Количество фильмов на странице"),
-    page: int = Query(1, description="Номер страницы"),
-    sort: str = Query("", description="Сортировка полей (Пример: imdb_rating:desc)"),
+    commons: dict = Depends(film_search_parameters),
     film_service: FilmService = Depends(get_film_service),
 ) -> List[APIFilmList]:
     """
     ручки film_search (полнотекстовый поиск по фильмам)
     """
     page = {
-        'size': page_size,
-        'number': page
+        'size': commons['page_size'],
+        'number': commons['page']
     }
-    films = await film_service.get_by_params(query=query, page=page, sort=sort)
+    films = await film_service.get_by_params(query=commons['query'], page=page, sort=commons['sort'])
     if not films:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="films not found")
     return [APIFilmList.parse_obj(film.dict(by_alias=True)) for film in films]
@@ -66,18 +65,19 @@ async def film_details(
 
 @router.get("/", response_model=List[APIFilmList])
 async def film_list(
-    page_size: int = Query(10, description="Количество фильмов на странице"),
-    page: int = Query(1, description="Номер страницы"),
-    sort: str = Query("", description="Сортировка полей (Пример: imdb_rating:desc)"),
-    _filter: str = Query(None, description="Фильтр по жанру (Пример: sci-fi)"),
-    film_service: FilmService = Depends(get_film_service),
+    commons: dict = Depends(film_list_parameters),
+    film_service: FilmService = Depends(get_film_service)
 ) -> List[APIFilmList]:
     """
     ручки film_list (вывод списка фильмов)
     """
     page = {
-        'size': page_size,
-        'number': page
+        'size': commons['page_size'],
+        'number': commons['page']
     }
-    films = await film_service.get_by_params(page=page, sort=sort, _filter=_filter)
+    query_filter = {
+        'field': 'genre',
+        'value': commons['genre']
+    }
+    films = await film_service.get_by_params(page=page, sort=commons['sort'], query_filter=query_filter)
     return [APIFilmList.parse_obj(film.dict(by_alias=True)) for film in films]
