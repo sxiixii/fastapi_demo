@@ -1,7 +1,6 @@
 from typing import Any, Optional, Union
 
 from fastapi import Request
-
 from pydantic import BaseModel
 from pydantic.types import PositiveInt
 
@@ -22,7 +21,7 @@ class Should(BaseModel):
 
 
 class Body(BaseModel):
-    query: Optional[str]
+    query: Optional[dict]
     sort: Optional[str]
     query_filter: Optional[Filter]
     should: Optional[list[Should]]
@@ -30,14 +29,14 @@ class Body(BaseModel):
 
 
 def _validate_query_params(
-    query: str = None,
+    query: dict = None,
     sort: str = None,
     page: dict = None,
     query_filter: dict = None,
     should: list = None,
 ) -> Body:
     page = page and Page(**page)
-    if query_filter['value'] is not None:
+    if query_filter is not None:
         field = query_filter['field']
         value = query_filter['value']
         query_filter = Filter(field=field, value=value)
@@ -61,9 +60,9 @@ def get_body(**raw_params) -> dict[str, Any]:
         query_body["size"] = params.page.size
 
     # searching
-    if params.query is not None:
+    if params.query is not None and params.query['value'] is not None:
         query_body.setdefault("query", {}).update(_get_search_query(params.query))
-    if params.query_filter.value is not None:
+    if params.query_filter is not None and params.query_filter.value is not None:
         query_body.setdefault("query", {}).update(_get_filter_query(params.query_filter))
     if params.should is not None:
         query_body.setdefault("query", {}).update(_get_should_query(params.should))
@@ -79,8 +78,8 @@ def get_body(**raw_params) -> dict[str, Any]:
     return query_body
 
 
-def _get_search_query(query: str) -> dict:
-    return {"query_string": {"query": query}}
+def _get_search_query(query: dict) -> dict:
+    return {"match": {query["field"]: {"query": query["value"], "fuzziness": "auto"}}}
 
 
 def _get_filter_query(_filter: Filter) -> dict:

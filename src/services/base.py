@@ -1,15 +1,13 @@
-import elasticsearch.exceptions
 import orjson
 from aioredis import Redis
-
-from orjson import loads as orjson_loads
 from core.config import CACHE_EXPIRE_IN_SECONDS
-from elasticsearch import AsyncElasticsearch, NotFoundError
+from elasticsearch import AsyncElasticsearch
+from elasticsearch.exceptions import NotFoundError, TransportError
 from models.base import orjson_dumps
-
 from models.film import FilmModel as FM
 from models.genre import GenreModel as GM
 from models.person import PersonModel as PM
+from orjson import loads as orjson_loads
 
 from .utils import get_body
 
@@ -31,10 +29,10 @@ class BaseService:
         # cначала попробуем достать из кэша
         redis_key = self.redis_key(id)
         obj = await self._obj_from_cache(redis_key)
-        if not obj: # если нет - достаем из эластика
+        if not obj:  # если нет - достаем из эластика
             try:
                 doc = await self.elastic.get(index=self.index, id=id)
-            except elasticsearch.exceptions.NotFoundError:
+            except (NotFoundError, TransportError):
                 # если нет в эластике - значит нет вообще с таким идентификатором
                 obj = None
             else:
@@ -51,10 +49,10 @@ class BaseService:
         # cначала попробуем достать из кэша
         redis_key = self.redis_key(body)
         obj_list = await self._list_from_cache(redis_key)
-        if not obj_list: # если нет - достаем из эластика
+        if not obj_list:  # если нет - достаем из эластика
             try:
                 doc = await self.elastic.search(body=body, index=self.index)
-            except elasticsearch.exceptions.NotFoundError:
+            except (NotFoundError, TransportError):
                 # если нет в эластике - значит нет вообще с таким идентификатором
                 obj_list = None
             else:
@@ -121,4 +119,8 @@ class BaseService:
         '''
         положить объекты в кэш
         '''
-        await self.redis.set(redis_key,orjson_dumps(obj_list, default=self.model.json),expire=CACHE_EXPIRE_IN_SECONDS)
+        await self.redis.set(
+            redis_key,
+            orjson_dumps(obj_list, default=self.model.json),
+            expire=CACHE_EXPIRE_IN_SECONDS
+        )

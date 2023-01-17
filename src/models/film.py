@@ -11,4 +11,3 @@ class FilmModel(BaseOrjsonModel):
     writers_names: list[str] = []
     actors: list[dict] = []
     writers: list[dict] = []
-

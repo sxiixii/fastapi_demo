@@ -1,9 +1,9 @@
 # Проектная работа 4 спринта
 
-### Прогресс
-:black_square_button: Dockerfile для билда бекенда для API. 
-> :ballot_box_with_check: поднимается fastapi, redis и elasticsearch
+репозитории:
 
+- etl - ![ссылка](https://github.com/sxiixii/s4_etl)
+- api - ![ссылка](https://github.com/sxiixii/async_api)
 ---
 ### Для разработки
 находясь в корне проекта - включи пре-коммит

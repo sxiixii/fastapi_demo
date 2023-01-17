@@ -2,17 +2,12 @@ from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
 from services.genre import GenreService, get_genre_service
 
 from .dependencies import common_parameters
+from .serializers import APIGenre
 
 router = APIRouter()
-
-
-class APIGenre(BaseModel):
-    id: str
-    name: str
 
 
 @router.get("/", response_model=List[APIGenre])
@@ -24,15 +19,20 @@ async def genres_all(
         'size': commons['size'],
         'number': commons['number']
     }
-    genres = await genre_service.get_by_params(query=commons['query'], page=page)
+    query = {
+        'field': 'name',
+        'value': commons['query']
+    }
+    genres = await genre_service.get_by_params(query=query, page=page)
     if not genres:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="genres not found")
     return [
         APIGenre(
             id=genre.id,
             name=genre.name,
-        ) for genre in genres
-    ]
+            description=genre.description,
+            film_ids=genre.film_ids
+        ) for genre in genres]
 
 
 @router.get("/{genre_id}", response_model=APIGenre)
