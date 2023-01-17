@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union
+from typing import Any
 
 from fastapi import Request
 from pydantic import BaseModel
@@ -21,11 +21,11 @@ class Should(BaseModel):
 
 
 class Body(BaseModel):
-    query: Optional[dict]
-    sort: Optional[str]
-    query_filter: Optional[Filter]
-    should: Optional[list[Should]]
-    page: Optional[Page]
+    query: dict | None
+    sort: str | None
+    query_filter: Filter | None
+    should: list[Should] | None
+    page: Page | None
 
 
 def _validate_query_params(
@@ -37,8 +37,8 @@ def _validate_query_params(
 ) -> Body:
     page = page and Page(**page)
     if query_filter is not None:
-        field = query_filter['field']
-        value = query_filter['value']
+        field = query_filter["field"]
+        value = query_filter["value"]
         query_filter = Filter(field=field, value=value)
     if should is not None:
         should_list = []
@@ -46,7 +46,9 @@ def _validate_query_params(
             field, value = tuple(should_item.items())[0]
             should_list.append(Should(field=field, value=value))
         should = should_list
-    body = Body(query=query, sort=sort, query_filter=query_filter, page=page, should=should)
+    body = Body(
+        query=query, sort=sort, query_filter=query_filter, page=page, should=should
+    )
     return body
 
 
@@ -60,10 +62,12 @@ def get_body(**raw_params) -> dict[str, Any]:
         query_body["size"] = params.page.size
 
     # searching
-    if params.query is not None and params.query['value'] is not None:
+    if params.query is not None and params.query["value"] is not None:
         query_body.setdefault("query", {}).update(_get_search_query(params.query))
     if params.query_filter is not None and params.query_filter.value is not None:
-        query_body.setdefault("query", {}).update(_get_filter_query(params.query_filter))
+        query_body.setdefault("query", {}).update(
+            _get_filter_query(params.query_filter)
+        )
     if params.should is not None:
         query_body.setdefault("query", {}).update(_get_should_query(params.should))
     if "query" not in query_body:
@@ -79,7 +83,18 @@ def get_body(**raw_params) -> dict[str, Any]:
 
 
 def _get_search_query(query: dict) -> dict:
-    return {"match": {query["field"]: {"query": query["value"], "fuzziness": "auto"}}}
+    return {
+        "fuzzy": {
+            query["field"]: {
+                "value": query["value"],
+                "fuzziness": "AUTO",
+                "max_expansions": 50,
+                "prefix_length": 0,
+                "transpositions": "true",
+                "rewrite": "constant_score",
+            }
+        }
+    }
 
 
 def _get_filter_query(_filter: Filter) -> dict:
@@ -97,12 +112,12 @@ def _get_should_query(should_list: list[Should]) -> dict:
     }
 
 
-def get_params(request: Request) -> dict[str, Union[str, dict]]:
-    params: dict[str, Union[str, dict]] = {}
+def get_params(request: Request) -> dict[str, str | dict]:
+    params: dict[str, str | dict] = {}
     for key, value in request.query_params.items():
         nested_key = key.removesuffix("]").split("[")
         if len(nested_key) == 2:
-            params.setdefault(nested_key[0], {}).update({nested_key[1]: value})  # type: ignore
+            params.setdefault(nested_key[0], {}).update({nested_key[1]: value})
             continue
         params[key] = value
 

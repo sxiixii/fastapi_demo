@@ -6,34 +6,30 @@ from services.film import FilmService, get_film_service
 from services.person import PersonService, get_person_service
 
 from .dependencies import common_parameters
-from .serializers import APIPerson, APIFilm
+from .serializers import APIPerson, APIPersonFilms
 
 router = APIRouter()
 
 
 @router.get("/search", response_model=List[APIPerson])
 async def persons_all(
-        person_service: PersonService = Depends(get_person_service),
-        commons: dict = Depends(common_parameters)
+    person_service: PersonService = Depends(get_person_service),
+    commons: dict = Depends(common_parameters),
 ) -> List[APIPerson]:
-    page = {
-        'size': commons['size'],
-        'number': commons['number']
-    }
-    query = {
-        'field': 'full_name',
-        'value': commons['query']
-    }
+    page = {"size": commons["size"], "number": commons["number"]}
+    query = {"field": "name", "value": commons["query"]}
     persons = await person_service.get_by_params(query=query, page=page)
     if not persons:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="persons not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="persons not found"
+        )
     return [
         APIPerson(
             id=person.id,
-            full_name=person.full_name,
-            role=person.role,
-            film_ids=person.film_ids,
-        ) for person in persons
+            name=person.name,
+            roles=person.roles,
+        )
+        for person in persons
     ]
 
 
@@ -47,20 +43,14 @@ async def person_details(
     return APIPerson(**person.dict())
 
 
-@router.get("/{person_id}/film", response_model=List[APIFilm])
+@router.get("/{person_id}/film", response_model=List[APIPersonFilms])
 async def person_films(
-        person_id: str,
-        person_service: PersonService = Depends(get_person_service),
-        film_service: FilmService = Depends(get_film_service),
-) -> List[APIFilm]:
+    person_id: str,
+    person_service: PersonService = Depends(get_person_service),
+    film_service: FilmService = Depends(get_film_service),
+) -> List[APIPersonFilms]:
     person = await person_service.get_by_id(person_id)
     if not person:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="person not found")
-    persons_film = await film_service.get_by_list_of_id(person.film_ids)
-    return [
-        APIFilm(
-            id=film.id,
-            title=film.title,
-            imdb_rating=film.imdb_rating
-        ) for film in persons_film
-    ]
+    persons_film = await film_service.get_person_films(person)
+    return [APIPersonFilms(role=item.role, films=item.films) for item in persons_film]

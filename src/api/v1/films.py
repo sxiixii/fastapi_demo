@@ -1,6 +1,6 @@
-from uuid import UUID
 from http import HTTPStatus
 from typing import List
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from services.film import FilmService, get_film_service
@@ -19,15 +19,11 @@ async def film_search(
     """
     ручки film_search (полнотекстовый поиск по фильмам)
     """
-    page = {
-        'size': commons['page_size'],
-        'number': commons['page']
-    }
-    query = {
-        'field': 'title',
-        'value': commons['query']
-    }
-    films = await film_service.get_by_params(query=query, page=page, sort=commons['sort'])
+    page = {"size": commons["page_size"], "number": commons["page"]}
+    query = {"field": "title", "value": commons["query"]}
+    films = await film_service.get_by_params(
+        query=query, page=page, sort=commons["sort"]
+    )
     if not films:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="films not found")
     return [APIFilm.parse_obj(film.dict(by_alias=True)) for film in films]
@@ -49,18 +45,14 @@ async def film_details(
 @router.get("/", response_model=List[APIFilm])
 async def film_list(
     commons: dict = Depends(film_list_parameters),
-    film_service: FilmService = Depends(get_film_service)
+    film_service: FilmService = Depends(get_film_service),
 ) -> List[APIFilm]:
     """
     ручки film_list (вывод списка фильмов)
     """
-    page = {
-        'size': commons['page_size'],
-        'number': commons['page']
-    }
-    query_filter = {
-        'field': 'genre',
-        'value': commons['genre']
-    }
-    films = await film_service.get_by_params(page=page, sort=commons['sort'], query_filter=query_filter)
+    page = {"size": commons["page_size"], "number": commons["page"]}
+    query_filter = {"field": "genre", "value": commons["genre"]}
+    films = await film_service.get_by_params(
+        page=page, sort=commons["sort"], query_filter=query_filter
+    )
     return [APIFilm.parse_obj(film.dict(by_alias=True)) for film in films]

@@ -12,17 +12,11 @@ router = APIRouter()
 
 @router.get("/", response_model=List[APIGenre])
 async def genres_all(
-        genre_service: GenreService = Depends(get_genre_service),
-        commons: dict = Depends(common_parameters)
+    genre_service: GenreService = Depends(get_genre_service),
+    commons: dict = Depends(common_parameters),
 ) -> List[APIGenre]:
-    page = {
-        'size': commons['size'],
-        'number': commons['number']
-    }
-    query = {
-        'field': 'name',
-        'value': commons['query']
-    }
+    page = {"size": commons["size"], "number": commons["number"]}
+    query = {"field": "name", "value": commons["query"]}
     genres = await genre_service.get_by_params(query=query, page=page)
     if not genres:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="genres not found")
@@ -31,8 +25,10 @@ async def genres_all(
             id=genre.id,
             name=genre.name,
             description=genre.description,
-            film_ids=genre.film_ids
-        ) for genre in genres]
+            film_ids=genre.film_ids,
+        )
+        for genre in genres
+    ]
 
 
 @router.get("/{genre_id}", response_model=APIGenre)

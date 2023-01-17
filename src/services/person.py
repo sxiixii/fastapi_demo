@@ -14,6 +14,10 @@ class PersonService(BaseService):
 
 
 @lru_cache()
-def get_person_service(redis: Redis = Depends(get_redis),
-                       elastic: AsyncElasticsearch = Depends(get_elastic)) -> PersonService:
-    return PersonService(index="persons", model=PersonModel, elastic=elastic, redis=redis)
+def get_person_service(
+    redis: Redis = Depends(get_redis),
+    elastic: AsyncElasticsearch = Depends(get_elastic),
+) -> PersonService:
+    return PersonService(
+        index="persons", model=PersonModel, elastic=elastic, redis=redis
+    )
