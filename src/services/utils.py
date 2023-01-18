@@ -83,10 +83,11 @@ def get_body(**raw_params) -> dict[str, Any]:
 
 
 def _get_search_query(query: dict) -> dict:
+    value = query["value"]
     return {
         "fuzzy": {
             query["field"]: {
-                "value": query["value"],
+                "value": value.lower(),
                 "fuzziness": "AUTO",
                 "max_expansions": 50,
                 "prefix_length": 0,

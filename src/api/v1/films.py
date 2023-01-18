@@ -55,4 +55,6 @@ async def film_list(
     films = await film_service.get_by_params(
         page=page, sort=commons["sort"], query_filter=query_filter
     )
+    if not films:  # Если фильмы не найден, отдаём 404 статус
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="films not found")
     return [APIFilm.parse_obj(film.dict(by_alias=True)) for film in films]

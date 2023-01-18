@@ -21,3 +21,6 @@ $ pre-commit run --all-files
 $ docker compose up -d --build
 ```
 *После запуска должна открываться [страница с документацией](http://0.0.0.0:8000/api/openapi)*
+___
+### Тесты
+Тесты для Postman находятся в корне проекта. Файл `APItests.postman_collection.json`

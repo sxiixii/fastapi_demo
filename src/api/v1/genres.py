@@ -16,8 +16,8 @@ async def genres_all(
     commons: dict = Depends(common_parameters),
 ) -> List[APIGenre]:
     page = {"size": commons["size"], "number": commons["number"]}
-    query = {"field": "name", "value": commons["query"]}
-    genres = await genre_service.get_by_params(query=query, page=page)
+    query_filter = {"field": "name", "value": commons["query"]}
+    genres = await genre_service.get_by_params(query_filter=query_filter, page=page)
     if not genres:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="genres not found")
     return [

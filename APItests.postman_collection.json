@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "081dea14-33c6-41a6-b0a6-ffe87e334a1a",
+		"_postman_id": "7ab3af65-f6bb-464a-9da1-936750695340",
 		"name": "APItests",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9422842"
 	},
 	"item": [
 		{
@@ -783,7 +784,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/persons/3a9864e7-d88b-4cf0-b28c-12859b1f32ef-actor",
+									"raw": "http://0.0.0.0:8000/api/v1/persons/3a9864e7-d88b-4cf0-b28c-12859b1f32ef",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -796,7 +797,7 @@
 										"api",
 										"v1",
 										"persons",
-										"3a9864e7-d88b-4cf0-b28c-12859b1f32ef-actor"
+										"3a9864e7-d88b-4cf0-b28c-12859b1f32ef"
 									]
 								}
 							},
@@ -872,7 +873,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/persons/3a9864e7-d88b-4cf0-b28c-12859b1f32ef-actor/film",
+									"raw": "http://0.0.0.0:8000/api/v1/persons/3a9864e7-d88b-4cf0-b28c-12859b1f32ef/film",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -885,7 +886,7 @@
 										"api",
 										"v1",
 										"persons",
-										"3a9864e7-d88b-4cf0-b28c-12859b1f32ef-actor",
+										"3a9864e7-d88b-4cf0-b28c-12859b1f32ef",
 										"film"
 									]
 								}
