@@ -29,11 +29,11 @@ class Body(BaseModel):
 
 
 def _validate_query_params(
-    query: dict = None,
-    sort: str = None,
-    page: dict = None,
-    query_filter: dict = None,
-    should: list = None,
+        query: dict = None,
+        sort: str = None,
+        page: dict = None,
+        query_filter: dict = None,
+        should: list = None,
 ) -> Body:
     page = page and Page(**page)
     if query_filter is not None:

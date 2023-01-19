@@ -1,44 +1,52 @@
-from typing import List
 from uuid import UUID
 
+import orjson
 from pydantic import BaseModel
 
+from models.base import orjson_dumps
 
-class RoleAndFilms(BaseModel):
+
+class BaseOrjsonModel(BaseModel):
+    class Config:
+        json_loads = orjson.loads
+        json_dumps = orjson_dumps
+
+
+class RoleAndFilms(BaseOrjsonModel):
     role: str
-    film_ids: List[UUID]
+    film_ids: list[UUID]
 
 
-class APIGenre(BaseModel):
+class APIGenre(BaseOrjsonModel):
     id: UUID
     name: str
     description: str
-    film_ids: List[UUID]
+    film_ids: list[UUID]
 
 
-class APIPersonBase(BaseModel):
+class APIPersonBase(BaseOrjsonModel):
     id: UUID
     name: str
 
 
 class APIPerson(APIPersonBase):
-    roles: List[RoleAndFilms]
+    roles: list[RoleAndFilms]
 
 
-class APIFilm(BaseModel):
+class APIFilm(BaseOrjsonModel):
     id: UUID
     title: str
     imdb_rating: float
-    genre: List[str]
+    genre: list[str]
 
 
 class APIFilmFull(APIFilm):
     description: str
-    actors: List[APIPersonBase] | None = []
-    writers: List[APIPersonBase] | None = []
-    directors: List[APIPersonBase] | None = []
+    actors: list[APIPersonBase] | None = []
+    writers: list[APIPersonBase] | None = []
+    directors: list[APIPersonBase] | None = []
 
 
-class APIPersonFilms(BaseModel):
+class APIPersonFilms(BaseOrjsonModel):
     role: str
-    films: List[APIFilm]
+    films: list[APIFilm]

@@ -1,37 +1,31 @@
+from dataclasses import dataclass
 from typing import Any
 from uuid import UUID
 
 import orjson
 from aioredis import Redis
-from core.config import CACHE_EXPIRE_IN_SECONDS
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.exceptions import NotFoundError, TransportError
+from orjson import loads as orjson_loads
+
+from core.config import settings
 from models.base import orjson_dumps
 from models.film import FilmModel as FM
 from models.film import RoleAndFilmsModel as RAF
 from models.genre import GenreModel as GM
 from models.person import PersonModel as PM
-from orjson import loads as orjson_loads
-
 from .utils import get_body
 
 
+@dataclass()
 class BaseService:
     """
     Базовый класс для всех сервисных классов, содержащий общую бизнес-логику
     """
-
-    def __init__(
-        self,
-        index: str,
-        model: Any,
-        elastic: AsyncElasticsearch,
-        redis: Redis,
-    ) -> None:
-        self.index = index
-        self.model = model
-        self.redis = redis
-        self.elastic = elastic
+    index: str
+    model: Any
+    elastic: AsyncElasticsearch
+    redis: Redis
 
     async def get_by_id(self, id: str | UUID) -> FM | GM | PM | None:
         """
@@ -119,8 +113,7 @@ class BaseService:
         data = await self.redis.get(redis_key)
         if not data:
             return None
-        else:
-            return self.model.parse_raw(data)
+        return self.model.parse_raw(data)
 
     async def _list_from_cache(self, redis_key: int) -> list[FM | GM | PM] | None:
         """
@@ -129,17 +122,16 @@ class BaseService:
         data = await self.redis.get(redis_key)
         if not data:
             return None
-        else:
-            return [self.model.parse_raw(_data) for _data in orjson_loads(data)]
+        return [self.model.parse_raw(_data) for _data in orjson_loads(data)]
 
     async def _put_obj_to_cache(self, redis_key: int, obj: FM | GM | PM | None):
         """
         положить объект в кэш
         """
-        await self.redis.set(redis_key, obj.json(), expire=CACHE_EXPIRE_IN_SECONDS)
+        await self.redis.set(redis_key, obj.json(), expire=settings.cache_expires)
 
     async def _put_list_to_cache(
-        self, redis_key: int, obj_list: list[FM | GM | PM | None]
+            self, redis_key: int, obj_list: list[FM | GM | PM | None]
     ):
         """
         положить объекты в кэш
@@ -147,5 +139,5 @@ class BaseService:
         await self.redis.set(
             redis_key,
             orjson_dumps(obj_list, default=self.model.json),
-            expire=CACHE_EXPIRE_IN_SECONDS,
+            expire=settings.cache_expires,
         )

@@ -1,20 +1,19 @@
 from http import HTTPStatus
-from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
-from services.genre import GenreService, get_genre_service
 
+from services.genre import GenreService, get_genre_service
 from .dependencies import common_parameters
 from .serializers import APIGenre
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[APIGenre])
+@router.get("/", response_model=list[APIGenre])
 async def genres_all(
-    genre_service: GenreService = Depends(get_genre_service),
-    commons: dict = Depends(common_parameters),
-) -> List[APIGenre]:
+        genre_service: GenreService = Depends(get_genre_service),
+        commons: dict = Depends(common_parameters),
+) -> list[APIGenre]:
     page = {"size": commons["size"], "number": commons["number"]}
     query_filter = {"field": "name", "value": commons["query"]}
     genres = await genre_service.get_by_params(query_filter=query_filter, page=page)
@@ -33,7 +32,7 @@ async def genres_all(
 
 @router.get("/{genre_id}", response_model=APIGenre)
 async def person_details(
-    genre_id: str, genre_service: GenreService = Depends(get_genre_service)
+        genre_id: str, genre_service: GenreService = Depends(get_genre_service)
 ) -> APIGenre:
     genre = await genre_service.get_by_id(genre_id)
     if not genre:

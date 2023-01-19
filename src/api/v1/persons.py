@@ -1,21 +1,20 @@
 from http import HTTPStatus
-from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
+
 from services.film import FilmService, get_film_service
 from services.person import PersonService, get_person_service
-
 from .dependencies import common_parameters
 from .serializers import APIPerson, APIPersonFilms
 
 router = APIRouter()
 
 
-@router.get("/search", response_model=List[APIPerson])
+@router.get("/search", response_model=list[APIPerson])
 async def persons_all(
-    person_service: PersonService = Depends(get_person_service),
-    commons: dict = Depends(common_parameters),
-) -> List[APIPerson]:
+        person_service: PersonService = Depends(get_person_service),
+        commons: dict = Depends(common_parameters),
+) -> list[APIPerson]:
     page = {"size": commons["size"], "number": commons["number"]}
     query = {"field": "name", "value": commons["query"]}
     persons = await person_service.get_by_params(query=query, page=page)
@@ -35,7 +34,7 @@ async def persons_all(
 
 @router.get("/{person_id}", response_model=APIPerson)
 async def person_details(
-    person_id: str, person_service: PersonService = Depends(get_person_service)
+        person_id: str, person_service: PersonService = Depends(get_person_service)
 ) -> APIPerson:
     person = await person_service.get_by_id(person_id)
     if not person:
@@ -43,12 +42,12 @@ async def person_details(
     return APIPerson(**person.dict())
 
 
-@router.get("/{person_id}/film", response_model=List[APIPersonFilms])
+@router.get("/{person_id}/film", response_model=list[APIPersonFilms])
 async def person_films(
-    person_id: str,
-    person_service: PersonService = Depends(get_person_service),
-    film_service: FilmService = Depends(get_film_service),
-) -> List[APIPersonFilms]:
+        person_id: str,
+        person_service: PersonService = Depends(get_person_service),
+        film_service: FilmService = Depends(get_film_service),
+) -> list[APIPersonFilms]:
     person = await person_service.get_by_id(person_id)
     if not person:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="person not found")

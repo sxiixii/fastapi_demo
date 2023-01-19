@@ -1,8 +1,8 @@
-from typing import List
 from uuid import UUID
 
-from models.base import BaseOrjsonModel
 from pydantic import BaseModel
+
+from models.base import BaseOrjsonModel
 
 
 class Person(BaseModel):
@@ -13,15 +13,15 @@ class Person(BaseModel):
 class FilmModel(BaseOrjsonModel):
     title: str
     imdb_rating: float | None = 0.0
-    genre: List[str] = []
+    genre: list[str] = []
     description: str | None = ""
-    director: List[str] | None = []
+    director: list[str] | None = []
     actors_names: list[str] = []
     writers_names: list[str] = []
-    actors: List[Person] | None = []
-    writers: List[Person] | None = []
+    actors: list[Person] | None = []
+    writers: list[Person] | None = []
 
 
 class RoleAndFilmsModel(BaseModel):
     role: str
-    films: List[FilmModel]
+    films: list[FilmModel]

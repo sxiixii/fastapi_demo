@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "7ab3af65-f6bb-464a-9da1-936750695340",
+		"_postman_id": "081dea14-33c6-41a6-b0a6-ffe87e334a1a",
 		"name": "APItests",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "9422842"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -110,6 +109,66 @@
 										{
 											"key": "query",
 											"value": "Zombies"
+										},
+										{
+											"key": "page_size",
+											"value": "10"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "sort",
+											"value": "imdb_rating"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "поиск фильма zombies",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=zombies&page_size=10&page=1&sort=imdb_rating",
+									"protocol": "http",
+									"host": [
+										"0",
+										"0",
+										"0",
+										"0"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"films",
+										"search"
+									],
+									"query": [
+										{
+											"key": "query",
+											"value": "zombies"
 										},
 										{
 											"key": "page_size",
@@ -249,6 +308,66 @@
 							"response": []
 						},
 						{
+							"name": "поиск фильма с аномальными значениями 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=10&page=1111111111&sort=imdb_rating",
+									"protocol": "http",
+									"host": [
+										"0",
+										"0",
+										"0",
+										"0"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"films",
+										"search"
+									],
+									"query": [
+										{
+											"key": "query",
+											"value": "Zombies"
+										},
+										{
+											"key": "page_size",
+											"value": "10"
+										},
+										{
+											"key": "page",
+											"value": "1111111111"
+										},
+										{
+											"key": "sort",
+											"value": "imdb_rating"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "поиск фильма с аномальными значениями 3",
 							"event": [
 								{
@@ -309,14 +428,14 @@
 							"response": []
 						},
 						{
-							"name": "поиск фильма с аномальными значениями 2",
+							"name": "поиск фильма с аномальными значениями 4",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 404\", function () {",
-											"    pm.response.to.have.status(404);",
+											"pm.test(\"Status code is 422\", function () {",
+											"    pm.response.to.have.status(422);",
 											"});",
 											"pm.test(\"Response time is less than 200ms\", function () {",
 											"    pm.expect(pm.response.responseTime).to.be.below(200);",
@@ -331,7 +450,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=10&page=1111111111&sort=imdb_rating",
+									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=10&page=-1&sort=imdb_rating",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -357,7 +476,127 @@
 										},
 										{
 											"key": "page",
-											"value": "1111111111"
+											"value": "-1"
+										},
+										{
+											"key": "sort",
+											"value": "imdb_rating"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "поиск фильма с аномальными значениями 5",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 422\", function () {",
+											"    pm.response.to.have.status(422);",
+											"});",
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=-10&page=1&sort=imdb_rating",
+									"protocol": "http",
+									"host": [
+										"0",
+										"0",
+										"0",
+										"0"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"films",
+										"search"
+									],
+									"query": [
+										{
+											"key": "query",
+											"value": "Zombies"
+										},
+										{
+											"key": "page_size",
+											"value": "-10"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "sort",
+											"value": "imdb_rating"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "поиск фильма с аномальными значениями 6",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 422\", function () {",
+											"    pm.response.to.have.status(422);",
+											"});",
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=0&page=0&sort=imdb_rating",
+									"protocol": "http",
+									"host": [
+										"0",
+										"0",
+										"0",
+										"0"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"v1",
+										"films",
+										"search"
+									],
+									"query": [
+										{
+											"key": "query",
+											"value": "Zombies"
+										},
+										{
+											"key": "page_size",
+											"value": "0"
+										},
+										{
+											"key": "page",
+											"value": "0"
 										},
 										{
 											"key": "sort",
@@ -916,7 +1155,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/persons/00000000-0000-0000-0000-000000000000-actor/film",
+									"raw": "http://0.0.0.0:8000/api/v1/persons/00000000-0000-0000-0000-000000000000/film",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -929,7 +1168,7 @@
 										"api",
 										"v1",
 										"persons",
-										"00000000-0000-0000-0000-000000000000-actor",
+										"00000000-0000-0000-0000-000000000000",
 										"film"
 									]
 								}
