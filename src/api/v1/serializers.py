@@ -1,9 +1,8 @@
 from uuid import UUID
 
 import orjson
-from pydantic import BaseModel
-
 from models.base import orjson_dumps
+from pydantic import BaseModel
 
 
 class BaseOrjsonModel(BaseModel):

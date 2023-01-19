@@ -140,3 +140,4 @@ poetry.lock
 pyproject.toml
 state/*.json
 .env
+docker-compose.override.yml

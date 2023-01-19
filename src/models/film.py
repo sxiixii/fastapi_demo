@@ -1,8 +1,7 @@
 from uuid import UUID
 
-from pydantic import BaseModel
-
 from models.base import BaseOrjsonModel
+from pydantic import BaseModel
 
 
 class Person(BaseModel):

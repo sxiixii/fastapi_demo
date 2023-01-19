@@ -1,55 +1,91 @@
 from fastapi import Query
 
-
-async def common_parameters(
-        query: str
-               | None = Query(default=None, title="Запрос", description="Запрос для поиска"),
-        page: int = Query(
-            default=1, title="Номер страницы", description="Номер страницы",
-            gt=0
-        ),
-        size: int = Query(
-            default=50,
-            title="Количество фильмов",
-            description="Количество фильмов на странице",
-            gt=0
-        ),
-) -> dict:
-    return {"query": query, "number": page, "size": size}
+FILM_DETAILS_MESSAGE = "films not found"
+GENRE_DETAILS_MESSAGE = "genres not found"
+PERSON_DETAILS_MESSAGE = "persons not found"
 
 
-async def film_search_parameters(
+class CommonQueryParams:
+    def __init__(
+            self,
+            query: str | None = Query(
+                default=None,
+                title="Запрос",
+                description="Поиск объекта",
+            ),
+            number: int = Query(
+                default=1,
+                title="Номер страницы",
+                description="Номер страницы",
+                gt=0,
+                alias="page[number]",
+            ),
+            size: int = Query(
+                default=50,
+                title="Количество фильмов",
+                description="Количество фильмов на странице",
+                gt=0,
+                alias="page[size]",
+            ),
+    ):
+        self.query = query
+        self.number = number
+        self.size = size
+
+
+class FilmQueryParams:
+    def __init__(
+        self,
         query: str = Query(
             default=None,
             title="Название фильма",
             description="Часть названия фильма (Пример: dark sta )",
         ),
-        page_size: int = Query(
+        size: int = Query(
             default=10,
             title="Количество фильмов",
             description="Количество фильмов на странице",
-            gt=0
+            gt=0,
+            alias="page[size]",
         ),
-        page: int = Query(default=1, title="Номер страницы", description="Номер страницы", gt=0),
+        number: int = Query(
+            default=1,
+            title="Номер страницы",
+            description="Номер страницы",
+            gt=0,
+            alias="page[number]",
+        ),
         sort: str = Query(
-            default="",
+            default=None,
             title="Сортировка",
-            description="Сортировка полей (Пример: -imdb_rating)"
+            description="Сортировка полей (Пример: -imdb_rating)",
         ),
-) -> dict:
-    return {"query": query, "page": page, "page_size": page_size, "sort": sort}
+    ):
+        self.query = query
+        self.size = size
+        self.number = number
+        self.sort = sort
 
 
-async def film_list_parameters(
-        page_size: int = Query(
+class FilmFilterParams:
+    def __init__(
+        self,
+        size: int = Query(
             default=10,
             title="Количество фильмов",
             description="Количество фильмов на странице",
-            gt=0
+            gt=0,
+            alias="page[size]",
         ),
-        page: int = Query(default=1, title="Номер страницы", description="Номер страницы", gt=0),
+        number: int = Query(
+            default=1,
+            title="Номер страницы",
+            description="Номер страницы",
+            gt=0,
+            alias="page[number]",
+        ),
         sort: str = Query(
-            default="",
+            default=None,
             title="Сортировка",
             description="Сортировка полей (Пример: -imdb_rating)",
         ),
@@ -58,5 +94,8 @@ async def film_list_parameters(
             title="Фильтр по жанру",
             description="Фильтр по жанру (Пример: sci-fi)",
         ),
-) -> dict:
-    return {"page": page, "page_size": page_size, "sort": sort, "genre": genre}
+    ):
+        self.size = size
+        self.number = number
+        self.sort = sort
+        self.genre = genre

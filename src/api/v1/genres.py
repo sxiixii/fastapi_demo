@@ -1,24 +1,32 @@
 from http import HTTPStatus
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
-
 from services.genre import GenreService, get_genre_service
-from .dependencies import common_parameters
+
+from .dependencies import GENRE_DETAILS_MESSAGE, CommonQueryParams
 from .serializers import APIGenre
 
 router = APIRouter()
 
 
-@router.get("/", response_model=list[APIGenre])
+@router.get("/", response_model=list[APIGenre], summary="поиск по жанрам")
 async def genres_all(
-        genre_service: GenreService = Depends(get_genre_service),
-        commons: dict = Depends(common_parameters),
+    genre_service: GenreService = Depends(get_genre_service),
+    commons: CommonQueryParams = Depends(CommonQueryParams),
 ) -> list[APIGenre]:
-    page = {"size": commons["size"], "number": commons["number"]}
-    query_filter = {"field": "name", "value": commons["query"]}
-    genres = await genre_service.get_by_params(query_filter=query_filter, page=page)
+    """
+    полнотекстовый поиск по жанрам
+    """
+    page = {"size": commons.size, "number": commons.number}
+    filter_parameter = {"field": "name", "value": commons.query}
+    genres = await genre_service.get_by_params(
+        filter_parameter=filter_parameter, page=page
+    )
     if not genres:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="genres not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail=GENRE_DETAILS_MESSAGE
+        )
     return [
         APIGenre(
             id=genre.id,
@@ -30,11 +38,16 @@ async def genres_all(
     ]
 
 
-@router.get("/{genre_id}", response_model=APIGenre)
+@router.get("/{genre_id}", response_model=APIGenre, summary="поиск жанра по UUID")
 async def person_details(
-        genre_id: str, genre_service: GenreService = Depends(get_genre_service)
+    genre_id: UUID, genre_service: GenreService = Depends(get_genre_service)
 ) -> APIGenre:
+    """
+    полная информация по жанру по его UUID
+    """
     genre = await genre_service.get_by_id(genre_id)
     if not genre:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="genre not found")
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail=GENRE_DETAILS_MESSAGE
+        )
     return APIGenre(**genre.dict())

@@ -34,7 +34,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?page_size=10&page=1&sort=imdb_rating",
+									"raw": "http://0.0.0.0/api/v1/films/search?page_size=10&page=1&sort=imdb_rating",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -42,7 +42,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -51,11 +51,11 @@
 									],
 									"query": [
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "10"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
@@ -90,7 +90,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=10&page=1&sort=imdb_rating",
+									"raw": "http://0.0.0.0/api/v1/films/search?query=Zombies&page_size=10&page=1&sort=imdb_rating",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -98,7 +98,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -111,11 +111,11 @@
 											"value": "Zombies"
 										},
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "10"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
@@ -150,7 +150,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=zombies&page_size=10&page=1&sort=imdb_rating",
+									"raw": "http://0.0.0.0/api/v1/films/search?query=zombies&page_size=10&page=1&sort=imdb_rating",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -158,7 +158,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -171,11 +171,11 @@
 											"value": "zombies"
 										},
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "10"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
@@ -210,7 +210,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=asjdhkasjdh&page_size=10&page=1&sort=imdb_rating",
+									"raw": "http://0.0.0.0/api/v1/films/search?query=asjdhkasjdh&page_size=10&page=1&sort=imdb_rating",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -218,7 +218,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -231,11 +231,11 @@
 											"value": "asjdhkasjdh"
 										},
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "10"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
@@ -270,7 +270,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=10000000&page=1&sort=imdb_rating",
+									"raw": "http://0.0.0.0/api/v1/films/search?query=Zombies&page_size=10000000&page=1&sort=imdb_rating",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -278,7 +278,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -291,11 +291,11 @@
 											"value": "Zombies"
 										},
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "10000000"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
@@ -330,7 +330,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=10&page=1111111111&sort=imdb_rating",
+									"raw": "http://0.0.0.0/api/v1/films/search?query=Zombies&page_size=10&page=1111111111&sort=imdb_rating",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -338,7 +338,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -351,11 +351,11 @@
 											"value": "Zombies"
 										},
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "10"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "1111111111"
 										},
 										{
@@ -390,7 +390,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=10&page=1&sort=beauty",
+									"raw": "http://0.0.0.0/api/v1/films/search?query=Zombies&page_size=10&page=1&sort=beauty",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -398,7 +398,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -411,11 +411,11 @@
 											"value": "Zombies"
 										},
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "10"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
@@ -450,7 +450,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=10&page=-1&sort=imdb_rating",
+									"raw": "http://0.0.0.0/api/v1/films/search?query=Zombies&page_size=10&page=-1&sort=imdb_rating",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -458,7 +458,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -471,11 +471,11 @@
 											"value": "Zombies"
 										},
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "10"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "-1"
 										},
 										{
@@ -510,7 +510,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=-10&page=1&sort=imdb_rating",
+									"raw": "http://0.0.0.0/api/v1/films/search?query=Zombies&page_size=-10&page=1&sort=imdb_rating",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -518,7 +518,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -531,11 +531,11 @@
 											"value": "Zombies"
 										},
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "-10"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
@@ -570,7 +570,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/search?query=Zombies&page_size=0&page=0&sort=imdb_rating",
+									"raw": "http://0.0.0.0/api/v1/films/search?query=Zombies&page_size=0&page=0&sort=imdb_rating",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -578,7 +578,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -591,11 +591,11 @@
 											"value": "Zombies"
 										},
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "0"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "0"
 										},
 										{
@@ -635,7 +635,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/791e4f61-f2f2-471e-866c-9ab1aa318e18",
+									"raw": "http://0.0.0.0/api/v1/films/791e4f61-f2f2-471e-866c-9ab1aa318e18",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -643,7 +643,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -677,7 +677,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/00000000-0000-0000-0000-000000000000",
+									"raw": "http://0.0.0.0/api/v1/films/00000000-0000-0000-0000-000000000000",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -685,7 +685,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -724,7 +724,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/?page_size=10&page=1&sort=-imdb_rating&genre=sci-fi",
+									"raw": "http://0.0.0.0/api/v1/films/?page_size=10&page=1&sort=-imdb_rating&genre=sci-fi",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -732,7 +732,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -741,11 +741,11 @@
 									],
 									"query": [
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "10"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
@@ -784,7 +784,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/films/?page_size=10&page=1&sort=-imdb_rating&genre=фывфыв",
+									"raw": "http://0.0.0.0/api/v1/films/?page_size=10&page=1&sort=-imdb_rating&genre=фывфыв",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -792,7 +792,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -801,11 +801,11 @@
 									],
 									"query": [
 										{
-											"key": "page_size",
+											"key": "page[size]",
 											"value": "10"
 										},
 										{
-											"key": "page",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
@@ -854,7 +854,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/persons/search?number=1&size=50",
+									"raw": "http://0.0.0.0/api/v1/persons/search?number=1&size=50",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -862,7 +862,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -871,11 +871,11 @@
 									],
 									"query": [
 										{
-											"key": "number",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
-											"key": "size",
+											"key": "page[size]",
 											"value": "50"
 										}
 									]
@@ -906,7 +906,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/persons/search?query=Jo&number=1&size=50",
+									"raw": "http://0.0.0.0/api/v1/persons/search?query=Jo&number=1&size=50",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -914,7 +914,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -927,11 +927,11 @@
 											"value": "Jo"
 										},
 										{
-											"key": "number",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
-											"key": "size",
+											"key": "page[size]",
 											"value": "50"
 										}
 									]
@@ -962,7 +962,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/persons/search?query=&number=1&size=50",
+									"raw": "http://0.0.0.0/api/v1/persons/search?query=&number=1&size=50",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -970,7 +970,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -983,11 +983,11 @@
 											"value": ""
 										},
 										{
-											"key": "number",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
-											"key": "size",
+											"key": "page[size]",
 											"value": "50"
 										}
 									]
@@ -1023,7 +1023,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/persons/3a9864e7-d88b-4cf0-b28c-12859b1f32ef",
+									"raw": "http://0.0.0.0/api/v1/persons/3a9864e7-d88b-4cf0-b28c-12859b1f32ef",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -1031,7 +1031,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -1065,7 +1065,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/persons/00000000-0000-0000-0000-000000000000",
+									"raw": "http://0.0.0.0/api/v1/persons/00000000-0000-0000-0000-000000000000",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -1073,7 +1073,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -1112,7 +1112,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/persons/3a9864e7-d88b-4cf0-b28c-12859b1f32ef/film",
+									"raw": "http://0.0.0.0/api/v1/persons/3a9864e7-d88b-4cf0-b28c-12859b1f32ef/film",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -1120,7 +1120,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -1155,7 +1155,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/persons/00000000-0000-0000-0000-000000000000/film",
+									"raw": "http://0.0.0.0/api/v1/persons/00000000-0000-0000-0000-000000000000/film",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -1163,7 +1163,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -1208,7 +1208,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/genres/?number=1&size=50",
+									"raw": "http://0.0.0.0/api/v1/genres/?number=1&size=50",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -1216,7 +1216,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -1225,11 +1225,11 @@
 									],
 									"query": [
 										{
-											"key": "number",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
-											"key": "size",
+											"key": "page[size]",
 											"value": "50"
 										}
 									]
@@ -1260,7 +1260,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/genres/?query=Talk-Show&number=1&size=50",
+									"raw": "http://0.0.0.0/api/v1/genres/?query=Talk-Show&number=1&size=50",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -1268,7 +1268,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -1281,11 +1281,11 @@
 											"value": "Talk-Show"
 										},
 										{
-											"key": "number",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
-											"key": "size",
+											"key": "page[size]",
 											"value": "50"
 										}
 									]
@@ -1316,7 +1316,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/genres/?query=&number=1&size=50",
+									"raw": "http://0.0.0.0/api/v1/genres/?query=&number=1&size=50",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -1324,7 +1324,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -1337,11 +1337,11 @@
 											"value": ""
 										},
 										{
-											"key": "number",
+											"key": "page[number]",
 											"value": "1"
 										},
 										{
-											"key": "size",
+											"key": "page[size]",
 											"value": "50"
 										}
 									]
@@ -1377,7 +1377,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/genres/31cabbb5-6389-45c6-9b48-f7f173f6c40f",
+									"raw": "http://0.0.0.0/api/v1/genres/31cabbb5-6389-45c6-9b48-f7f173f6c40f",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -1385,7 +1385,7 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
@@ -1419,7 +1419,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://0.0.0.0:8000/api/v1/genres/000000000-0000-0000-0000-0000000000000",
+									"raw": "http://0.0.0.0/api/v1/genres/000000000-0000-0000-0000-0000000000000",
 									"protocol": "http",
 									"host": [
 										"0",
@@ -1427,12 +1427,12 @@
 										"0",
 										"0"
 									],
-									"port": "8000",
+									"port": "",
 									"path": [
 										"api",
 										"v1",
 										"genres",
-										"000000000-0000-0000-0000-0000000000000"
+										"0b105f87-e0a5-45dc-8ce7-f8632088f391"
 									]
 								}
 							},

@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.9"
 
 services:
 
@@ -35,8 +35,6 @@ services:
   fast_api:
     build: .
     container_name: fast_api
-    ports:
-      - '8000:8000'
     env_file:
       - ./src/.env
     depends_on:
@@ -44,6 +42,21 @@ services:
       - redis
     networks:
       - fast_api
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    volumes:
+      - ./etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./etc/nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - fast_api
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - nginx
 
 volumes:
   elasticsearch-data:
@@ -55,4 +68,6 @@ networks:
   redis:
     name: s4_network
   fast_api:
+    name: s4_network
+  nginx:
     name: s4_network
