@@ -20,7 +20,13 @@ $ pre-commit run --all-files
 ```commandline
 $ docker compose up -d --build
 ```
-*После запуска должна открываться [страница с документацией](http://0.0.0.0:8000/api/openapi)*
+*После запуска должна открываться страница с документацией [openapi](http://localhost:80/api/openapi) или [redoc](http://localhost:80/api/redoc)*
 ___
 ### Тесты
+#### Postman
 Тесты для Postman находятся в корне проекта. Файл `APItests.postman_collection.json`
+
+#### Функциональные тесты
+Возможны два сценария запуска тестов:
+1. Запуск в Docker. Для этого перейти `tests/functional` и выполнить `docker compose up -d`. Для корректной работы тестов необходимо заполнить файл `.env.docker`, которые находится в `tests/functional`, переменными окружения согласно шаблону.
+2. Запуск локально. Для этого нужно убедиться, что остальные сервисы запущены в Docker. Затем перейти в `tests/functional` и выполнить команду ` pytest --disable-warnings ./src`. Для локального запуска необходимо заполнить файл `.env`, который находится в `tests/functional`, переменными окружения согласно шаблону

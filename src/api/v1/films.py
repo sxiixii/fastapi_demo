@@ -21,10 +21,8 @@ async def film_search(
     page = {"size": commons.size, "number": commons.number}
     query = {"field": "title", "value": commons.query}
     films = await film_service.get_by_params(query=query, page=page, sort=commons.sort)
-    if not films:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail=FILM_DETAILS_MESSAGE
-        )
+    if films is None:
+        return []
     return [APIFilm.parse_obj(film.dict(by_alias=True)) for film in films]
 
 
@@ -56,8 +54,6 @@ async def film_list(
     films = await film_service.get_by_params(
         page=page, sort=commons.sort, filter_parameter=filter_parameter
     )
-    if not films:  # Если фильмы не найден, отдаём 404 статус
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail=FILM_DETAILS_MESSAGE
-        )
+    if films is None:  # Если фильмы не найден, отдаём пустой список
+        return []
     return [APIFilm.parse_obj(film.dict(by_alias=True)) for film in films]

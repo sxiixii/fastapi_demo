@@ -1,18 +1,23 @@
+import logging
 from typing import Any
 from uuid import UUID
 
 from aioredis import Redis
-from core.config import settings
 from elasticsearch import AsyncElasticsearch
-from elasticsearch.exceptions import NotFoundError, TransportError
+from elasticsearch.exceptions import BadRequestError, NotFoundError, TransportError
+from orjson import loads as orjson_loads
+
+from core.config import settings
 from models.base import orjson_dumps
 from models.film import FilmModel as FM
 from models.film import RoleAndFilmsModel as RAF
 from models.genre import GenreModel as GM
 from models.person import PersonModel as PM
-from orjson import loads as orjson_loads
-
 from .utils import QueryParameterHandler
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+loggingStreamHandler = logging.StreamHandler()
 
 
 class BaseService:
@@ -21,7 +26,7 @@ class BaseService:
     """
 
     def __init__(
-        self, index: str, model: Any, elastic: AsyncElasticsearch, redis: Redis
+            self, index: str, model: Any, elastic: AsyncElasticsearch, redis: Redis
     ):
         self.index = index
         self.model = model
@@ -35,7 +40,9 @@ class BaseService:
         if not obj:
             try:
                 doc = await self.elastic.get(index=self.index, id=id)
-            except (NotFoundError, TransportError):
+            except (NotFoundError, TransportError, BadRequestError) as e:
+                logger.error('ОШИБКА')
+                logger.error(e)
                 obj = None
             else:
                 obj = self.model(**doc["_source"])
@@ -49,7 +56,9 @@ class BaseService:
         if not obj_list:
             try:
                 doc = await self.elastic.search(body=es_query_body, index=self.index)
-            except (NotFoundError, TransportError):
+            except (NotFoundError, TransportError, BadRequestError) as e:
+                logger.error('ОШИБКА')
+                logger.error(e)
                 obj_list = None
             else:
                 obj_list = [
@@ -75,7 +84,9 @@ class BaseService:
         body = {"query": {"terms": {"id": list(ids_list), "boost": 1.0}}}
         try:
             doc = await self.elastic.search(index="movies", body=body)
-        except NotFoundError:
+        except NotFoundError as e:
+            logger.error('ОШИБКА')
+            logger.error(e)
             return None
         list_of_films = doc["hits"]["hits"]
         list_of_role_and_films = []
@@ -112,7 +123,7 @@ class BaseService:
         await self.redis.set(redis_key, obj.json(), expire=settings.cache_expires)
 
     async def _put_list_to_cache(
-        self, redis_key: str, obj_list: list[FM | GM | PM | None]
+            self, redis_key: str, obj_list: list[FM | GM | PM | None]
     ):
         await self.redis.set(
             redis_key,

@@ -7,26 +7,27 @@ PERSON_DETAILS_MESSAGE = "persons not found"
 
 class CommonQueryParams:
     def __init__(
-            self,
-            query: str | None = Query(
-                default=None,
-                title="Запрос",
-                description="Поиск объекта",
-            ),
-            number: int = Query(
-                default=1,
-                title="Номер страницы",
-                description="Номер страницы",
-                gt=0,
-                alias="page[number]",
-            ),
-            size: int = Query(
-                default=50,
-                title="Количество фильмов",
-                description="Количество фильмов на странице",
-                gt=0,
-                alias="page[size]",
-            ),
+        self,
+        query: str
+        | None = Query(
+            default=None,
+            title="Запрос",
+            description="Поиск объекта",
+        ),
+        number: int = Query(
+            default=1,
+            title="Номер страницы",
+            description="Номер страницы",
+            gt=0,
+            alias="page[number]",
+        ),
+        size: int = Query(
+            default=50,
+            title="Количество фильмов",
+            description="Количество фильмов на странице",
+            gt=0,
+            alias="page[size]",
+        ),
     ):
         self.query = query
         self.number = number
@@ -46,6 +47,7 @@ class FilmQueryParams:
             title="Количество фильмов",
             description="Количество фильмов на странице",
             gt=0,
+            le=10000,
             alias="page[size]",
         ),
         number: int = Query(
@@ -53,6 +55,7 @@ class FilmQueryParams:
             title="Номер страницы",
             description="Номер страницы",
             gt=0,
+            le=10000,
             alias="page[number]",
         ),
         sort: str = Query(
@@ -75,6 +78,7 @@ class FilmFilterParams:
             title="Количество фильмов",
             description="Количество фильмов на странице",
             gt=0,
+            le=10000,
             alias="page[size]",
         ),
         number: int = Query(
@@ -82,6 +86,7 @@ class FilmFilterParams:
             title="Номер страницы",
             description="Номер страницы",
             gt=0,
+            le=10000,
             alias="page[number]",
         ),
         sort: str = Query(

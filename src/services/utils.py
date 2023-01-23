@@ -1,6 +1,5 @@
 from typing import Any
 
-from fastapi import Request
 from pydantic import BaseModel
 from pydantic.types import PositiveInt
 

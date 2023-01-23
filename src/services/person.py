@@ -7,6 +7,7 @@ from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
 from models.person import PersonModel
 from services.base import BaseService
+from core.config import person_settings
 
 
 class PersonService(BaseService):
@@ -19,5 +20,5 @@ def get_person_service(
     elastic: AsyncElasticsearch = Depends(get_elastic),
 ) -> PersonService:
     return PersonService(
-        index="persons", model=PersonModel, elastic=elastic, redis=redis
+        index=person_settings.es_index, model=PersonModel, elastic=elastic, redis=redis
     )

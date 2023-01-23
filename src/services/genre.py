@@ -7,6 +7,7 @@ from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
 from models.genre import GenreModel
 from services.base import BaseService
+from core.config import genre_settings
 
 
 class GenreService(BaseService):
@@ -18,4 +19,4 @@ def get_genre_service(
     redis: Redis = Depends(get_redis),
     elastic: AsyncElasticsearch = Depends(get_elastic),
 ) -> GenreService:
-    return GenreService(index="genres", model=GenreModel, elastic=elastic, redis=redis)
+    return GenreService(index=genre_settings.es_index, model=GenreModel, elastic=elastic, redis=redis)

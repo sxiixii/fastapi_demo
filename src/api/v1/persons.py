@@ -23,10 +23,8 @@ async def persons_all(
     page = {"size": commons.size, "number": commons.number}
     query = {"field": "name", "value": commons.query}
     persons = await person_service.get_by_params(query=query, page=page)
-    if not persons:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail=PERSON_DETAILS_MESSAGE
-        )
+    if persons is None:
+        return []
     return [
         APIPerson(
             id=person.id,
@@ -73,4 +71,6 @@ async def person_films(
             status_code=HTTPStatus.NOT_FOUND, detail=PERSON_DETAILS_MESSAGE
         )
     persons_film = await film_service.get_person_films(person)
+    if person_films is None:
+        return []
     return [APIPersonFilms(role=item.role, films=item.films) for item in persons_film]

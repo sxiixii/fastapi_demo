@@ -23,10 +23,8 @@ async def genres_all(
     genres = await genre_service.get_by_params(
         filter_parameter=filter_parameter, page=page
     )
-    if not genres:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail=GENRE_DETAILS_MESSAGE
-        )
+    if genres is None:
+        return []
     return [
         APIGenre(
             id=genre.id,

@@ -1,16 +1,37 @@
 import aioredis
-from api.v1 import films, genres, persons
-from core.config import settings
-from db import elastic, redis
 from elasticsearch import AsyncElasticsearch
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
+from api.v1 import films, genres, persons
+from core.config import settings
+from db import elastic, redis
+
+tags_metadata = [
+    {
+        "name": "films",
+        "description": "Поиск фильмов",
+    },
+    {
+        "name": "persons",
+        "description": "Поиск персон (актеров, киноделов, сценаристов) и фильмов, в которых персона работала",
+    },
+    {
+        "name": "genres",
+        "description": "Поиск жанров",
+    },
+]
+
 app = FastAPI(
     title=settings.project_name,
+    description='API для кинотеатра 🎥'
+                'При помощи этого API возможно найти данные о '
+                'любом интересующем вас фильме, доступной на сайте кинотеатра',
     docs_url="/api/openapi",
+    redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
+    openapi_tags=tags_metadata
 )
 
 
