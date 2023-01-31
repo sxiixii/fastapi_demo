@@ -1,13 +1,12 @@
 from functools import lru_cache
 
-from aioredis import Redis
-from db.elastic import get_elastic
-from db.redis import get_redis
-from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
+
+from core.config import genre_settings
+from db.elastic import get_base_elastic
+from db.redis import RedisCache, get_redis
 from models.genre import GenreModel
 from services.base import BaseService
-from core.config import genre_settings
 
 
 class GenreService(BaseService):
@@ -16,7 +15,7 @@ class GenreService(BaseService):
 
 @lru_cache()
 def get_genre_service(
-    redis: Redis = Depends(get_redis),
-    elastic: AsyncElasticsearch = Depends(get_elastic),
+        cache: RedisCache = Depends(get_redis),
+        elastic=Depends(get_base_elastic),
 ) -> GenreService:
-    return GenreService(index=genre_settings.es_index, model=GenreModel, elastic=elastic, redis=redis)
+    return GenreService(index=genre_settings.es_index, model=GenreModel, elastic=elastic, cache=cache)

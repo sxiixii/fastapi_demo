@@ -20,7 +20,8 @@ async def film_search(
     """
     page = {"size": commons.size, "number": commons.number}
     query = {"field": "title", "value": commons.query}
-    films = await film_service.get_by_params(query=query, page=page, sort=commons.sort)
+    params = {"query": query, "page": page, "sort": commons.sort}
+    films = await film_service.get(params)
     if films is None:
         return []
     return [APIFilm.parse_obj(film.dict(by_alias=True)) for film in films]
@@ -33,7 +34,7 @@ async def film_details(
     """
     полная информация по фильму по его UUID
     """
-    film = await film_service.get_by_id(film_id)
+    film = await film_service.get(film_id)
     if not film:  # Если фильм не найден, отдаём 404 статус
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="film not found")
     return APIFilmFull(**film.dict(by_alias=True))
@@ -51,9 +52,8 @@ async def film_list(
     """
     page = {"size": commons.size, "number": commons.number}
     filter_parameter = {"field": "genre", "value": commons.genre}
-    films = await film_service.get_by_params(
-        page=page, sort=commons.sort, filter_parameter=filter_parameter
-    )
+    params = {"page": page, "filter_parameter": filter_parameter, "sort": commons.sort}
+    films = await film_service.get(params)
     if films is None:  # Если фильмы не найден, отдаём пустой список
         return []
     return [APIFilm.parse_obj(film.dict(by_alias=True)) for film in films]

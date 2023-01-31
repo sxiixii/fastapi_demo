@@ -22,7 +22,8 @@ async def persons_all(
     """
     page = {"size": commons.size, "number": commons.number}
     query = {"field": "name", "value": commons.query}
-    persons = await person_service.get_by_params(query=query, page=page)
+    params = {"query": query, "page": page}
+    persons = await person_service.get(params)
     if persons is None:
         return []
     return [
@@ -44,7 +45,7 @@ async def person_details(
     """
     полная информация по персоне по его UUID
     """
-    person = await person_service.get_by_id(person_id)
+    person = await person_service.get(person_id)
     if not person:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail=PERSON_DETAILS_MESSAGE
@@ -65,12 +66,12 @@ async def person_films(
     """
     Вывод фильмов в которых участвовала персона по UUID
     """
-    person = await person_service.get_by_id(person_id)
+    person = await person_service.get(person_id)
     if not person:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail=PERSON_DETAILS_MESSAGE
         )
-    persons_film = await film_service.get_person_films(person)
+    persons_film = await film_service.get(person)
     if person_films is None:
         return []
     return [APIPersonFilms(role=item.role, films=item.films) for item in persons_film]

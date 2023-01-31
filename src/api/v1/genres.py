@@ -20,9 +20,8 @@ async def genres_all(
     """
     page = {"size": commons.size, "number": commons.number}
     filter_parameter = {"field": "name", "value": commons.query}
-    genres = await genre_service.get_by_params(
-        filter_parameter=filter_parameter, page=page
-    )
+    params = {"page": page, "filter_parameter": filter_parameter}
+    genres = await genre_service.get(params)
     if genres is None:
         return []
     return [
@@ -43,7 +42,7 @@ async def person_details(
     """
     полная информация по жанру по его UUID
     """
-    genre = await genre_service.get_by_id(genre_id)
+    genre = await genre_service.get(genre_id)
     if not genre:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail=GENRE_DETAILS_MESSAGE

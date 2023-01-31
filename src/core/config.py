@@ -1,10 +1,12 @@
 import os
 from logging import config as logging_config
+from dotenv import load_dotenv
 
 from core.logger import LOGGING
 from pydantic import BaseSettings, Field
 
 logging_config.dictConfig(LOGGING)
+load_dotenv()
 
 
 class Settings(BaseSettings):
@@ -15,7 +17,7 @@ class Settings(BaseSettings):
     redis_port: int = Field(..., env="REDIS_PORT")
     elastic_host: str = Field(..., env="ELASTIC_HOST")
     elastic_port: int = Field(..., env="ELASTIC_PORT")
-    cache_expires: int = 2
+    cache_expires: int = 60 * 5
 
     class Config:
         env_file = ".env"
