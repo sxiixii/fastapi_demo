@@ -1,108 +1,63 @@
 movies_index = {
-          "settings": {
-            "refresh_interval": "1s",
-            "analysis": {
-              "filter": {
-                "english_stop": {
-                  "type":       "stop",
-                  "stopwords":  "_english_"
-                },
-                "english_stemmer": {
-                  "type": "stemmer",
-                  "language": "english"
-                },
+    "settings": {
+        "refresh_interval": "1s",
+        "analysis": {
+            "filter": {
+                "english_stop": {"type": "stop", "stopwords": "_english_"},
+                "english_stemmer": {"type": "stemmer", "language": "english"},
                 "english_possessive_stemmer": {
-                  "type": "stemmer",
-                  "language": "possessive_english"
+                    "type": "stemmer",
+                    "language": "possessive_english",
                 },
-                "russian_stop": {
-                  "type":       "stop",
-                  "stopwords":  "_russian_"
-                },
-                "russian_stemmer": {
-                  "type": "stemmer",
-                  "language": "russian"
-                }
-              },
-              "analyzer": {
+                "russian_stop": {"type": "stop", "stopwords": "_russian_"},
+                "russian_stemmer": {"type": "stemmer", "language": "russian"},
+            },
+            "analyzer": {
                 "ru_en": {
-                  "tokenizer": "standard",
-                  "filter": [
-                    "lowercase",
-                    "english_stop",
-                    "english_stemmer",
-                    "english_possessive_stemmer",
-                    "russian_stop",
-                    "russian_stemmer"
-                  ]
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "english_stop",
+                        "english_stemmer",
+                        "english_possessive_stemmer",
+                        "russian_stop",
+                        "russian_stemmer",
+                    ],
                 }
-              }
-            }
-          },
-          "mappings": {
-            "dynamic": "strict",
-            "properties": {
-              "id": {
-                "type": "keyword"
-              },
-              "imdb_rating": {
-                "type": "float"
-              },
-              "genre": {
-                "type": "text",
-                "analyzer": "ru_en"
-              },
-              "title": {
+            },
+        },
+    },
+    "mappings": {
+        "dynamic": "strict",
+        "properties": {
+            "id": {"type": "keyword"},
+            "imdb_rating": {"type": "float"},
+            "genre": {"type": "text", "analyzer": "ru_en"},
+            "title": {
                 "type": "text",
                 "analyzer": "ru_en",
-                "fields": {
-                  "raw": {
-                    "type":  "keyword"
-                  }
-                }
-              },
-              "description": {
-                "type": "text",
-                "analyzer": "ru_en"
-              },
-              "director": {
-                "type": "text",
-                "analyzer": "ru_en"
-              },
-              "actors_names": {
-                "type": "text",
-                "analyzer": "ru_en"
-              },
-              "writers_names": {
-                "type": "text",
-                "analyzer": "ru_en"
-              },
-              "actors": {
+                "fields": {"raw": {"type": "keyword"}},
+            },
+            "description": {"type": "text", "analyzer": "ru_en"},
+            "director": {"type": "text", "analyzer": "ru_en"},
+            "actors_names": {"type": "text", "analyzer": "ru_en"},
+            "writers_names": {"type": "text", "analyzer": "ru_en"},
+            "actors": {
                 "type": "nested",
                 "dynamic": "strict",
                 "properties": {
-                  "id": {
-                    "type": "keyword"
-                  },
-                  "name": {
-                    "type": "text",
-                    "analyzer": "ru_en"
-                  }
-                }
-              },
-              "writers": {
+                    "id": {"type": "keyword"},
+                    "name": {"type": "text", "analyzer": "ru_en"},
+                },
+            },
+            "writers": {
                 "type": "nested",
                 "dynamic": "strict",
                 "properties": {
-                  "id": {
-                    "type": "keyword"
-                  },
-                  "name": {
-                    "type": "text",
-                    "analyzer": "ru_en"
-                  }
-                }
-              }
-            }
-          }
-        }
+                    "id": {"type": "keyword"},
+                    "name": {"type": "text", "analyzer": "ru_en"},
+                },
+            },
+        },
+    },
+}

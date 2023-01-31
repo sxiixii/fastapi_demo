@@ -1,12 +1,11 @@
 import logging
 from uuid import UUID
+
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.exceptions import BadRequestError, NotFoundError, TransportError
-
-from models.film import FilmModel as FM
-from models.film import RoleAndFilmsModel as RAF
-from models.genre import GenreModel as GM
-from models.person import PersonModel as PM
+from models.film import FilmModel, RoleAndFilmsModel
+from models.person import PersonModel
+from pydantic import BaseModel
 
 from .base import BaseDB
 from .utils import QueryParameterHandler
@@ -23,40 +22,38 @@ class ElasticBase(BaseDB):
         self.elastic = elastic
         self.query_handler = QueryParameterHandler()
 
-    async def get(self, index, model, params) -> FM | GM | PM | None:
+    async def get(self, index, model, params) -> BaseModel | None:
         if isinstance(params, dict):
             return await self._search_by_params(index, model, params)
         return await self._get_by_id(index, model, params)
 
-    async def _get_by_id(self, index, model, id) -> FM | GM | PM | None:
+    async def _get_by_id(self, index, model, id) -> BaseModel | None:
         obj = None
         try:
             doc = await self.elastic.get(index=index, id=id)
         except (NotFoundError, TransportError, BadRequestError) as e:
-            logger.error('ОШИБКА')
+            logger.error("ОШИБКА")
             logger.error(e)
         else:
             obj = model(**doc["_source"])
         return obj
 
-    async def _search_by_params(self, index, model, query_body) -> FM | GM | PM | None:
+    async def _search_by_params(self, index, model, query_body) -> BaseModel | None:
         valid_query_body = self.query_handler.get_es_query_body(query_body)
         obj_list = None
         try:
             doc = await self.elastic.search(body=valid_query_body, index=index)
         except (NotFoundError, TransportError, BadRequestError) as e:
-            logger.error('ОШИБКА')
+            logger.error("ОШИБКА")
             logger.error(e)
         else:
-            obj_list = [
-                model(**_doc["_source"]) for _doc in doc["hits"]["hits"]
-            ]
+            obj_list = [model(**_doc["_source"]) for _doc in doc["hits"]["hits"]]
         return obj_list
 
 
 class ElasticMovies(ElasticBase):
-    async def get(self, index, model, params) -> FM | GM | PM | None:
-        if isinstance(params, PM):
+    async def get(self, index, model, params) -> BaseModel | None:
+        if isinstance(params, PersonModel):
             return await self._search_person_films(params)
         return await super().get(index, model, params)
 
@@ -70,14 +67,14 @@ class ElasticMovies(ElasticBase):
         try:
             doc = await self.elastic.search(index="movies", body=body)
         except NotFoundError as e:
-            logger.error('ОШИБКА')
+            logger.error("ОШИБКА")
             logger.error(e)
             return None
         list_of_films = doc["hits"]["hits"]
         list_of_role_and_films = []
         for item in roles_and_films:
             films_obj = [
-                FM(
+                FilmModel(
                     id=film["_source"]["id"],
                     title=film["_source"]["title"],
                     imdb_rating=film["_source"]["imdb_rating"],
@@ -86,7 +83,7 @@ class ElasticMovies(ElasticBase):
                 for film in list_of_films
                 if UUID(film["_source"]["id"]) in item.film_ids
             ]
-            list_of_role_and_films.append(RAF(role=item.role, films=films_obj))
+            list_of_role_and_films.append(RoleAndFilmsModel(role=item.role, films=films_obj))
         return list_of_role_and_films
 
 

@@ -1,15 +1,19 @@
-import time
 import os
-from elasticsearch import Elasticsearch
+
+from backoff import backoff
 from dotenv import load_dotenv
+from elasticsearch import Elasticsearch
 
 load_dotenv()
 
 es_host = f'{os.getenv("ELASTIC_HOST")}:{os.getenv("ELASTIC_PORT")}'
 
-if __name__ == '__main__':
+
+@backoff()
+def connected_to_es(client):
+    return client.ping()
+
+
+if __name__ == "__main__":
     es_client = Elasticsearch([es_host])
-    while True:
-        if es_client.ping():
-            break
-        time.sleep(1)
+    connected_to_es(es_client)

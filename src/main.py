@@ -1,11 +1,10 @@
 import aioredis
-from elasticsearch import AsyncElasticsearch
-from fastapi import FastAPI
-from fastapi.responses import ORJSONResponse
-
 from api.v1 import films, genres, persons
 from core.config import settings
 from db import elastic, redis
+from elasticsearch import AsyncElasticsearch
+from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 
 tags_metadata = [
     {
@@ -24,25 +23,26 @@ tags_metadata = [
 
 app = FastAPI(
     title=settings.project_name,
-    description='API для кинотеатра 🎥'
-                'При помощи этого API возможно найти данные о '
-                'любом интересующем вас фильме, доступной на сайте кинотеатра',
+    description="API для кинотеатра 🎥"
+    "При помощи этого API возможно найти данные о "
+    "любом интересующем вас фильме, доступной на сайте кинотеатра",
     docs_url="/api/openapi",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
     default_response_class=ORJSONResponse,
-    openapi_tags=tags_metadata
+    openapi_tags=tags_metadata,
 )
 
 
 @app.on_event("startup")
 async def startup():
-    redis.redis = await aioredis.create_redis_pool((settings.redis_host,
-                                                    settings.redis_port),
-                                                   minsize=10,
-                                                   maxsize=20)
+    redis.redis = await aioredis.create_redis_pool(
+        (settings.redis_host, settings.redis_port), minsize=10, maxsize=20
+    )
 
-    elastic.es = AsyncElasticsearch(hosts=[f"{settings.elastic_host}:{settings.elastic_port}"])
+    elastic.es = AsyncElasticsearch(
+        hosts=[f"{settings.elastic_host}:{settings.elastic_port}"]
+    )
 
 
 @app.on_event("shutdown")
